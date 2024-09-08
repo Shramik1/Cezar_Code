@@ -1,0 +1,78 @@
+print('Welcome to the Caesar Cipher Tool')
+mode = input('Choose an operation: (1.Encrypt|2.Decrypt|3.Bruteforce)')
+lang = input('Specify the text language: (1.Russian|2.English)')
+# key = input('Specify the shift size: ')
+text = input('Enter your text: ')
+
+def is_valid_key(num):
+    if num.isdigit() and int(key) < 32:
+        return True
+    else:
+        return False
+
+while True:
+    key = input('Specify the shift size: ')
+    if not is_valid_key(key):
+        print('Enter a natural number!!!')
+        continue
+    key = int(key)
+    break
+
+def uncipher_bruteforce(key):
+    for i in range(key):
+        print(uncipher(text, i, lang), i, sep=': ')
+        
+
+def uncipher(text, key, lang):
+    uncip_text = ''
+    
+    if lang.lower() in ['russian', 'русский', '1']:
+        dictionary  = 'абвгдежзийклмнопрстуфхцчшщъыьэюя'
+    elif lang.lower() in ['english', 'английский', '2']:
+        dictionary  = 'abcdefghijklmnopqrstuvwxyz'
+    else:
+        return 'This language is not available in the options'
+    
+    for i in range(len(text)):
+        for j in range(len(dictionary)):
+            if text[i] == dictionary[j]:
+                uncip_text += dictionary[(j - key) % len(dictionary)]
+            elif text[i] == dictionary[j].upper():
+                uncip_text += dictionary[(j - key) % len(dictionary)].upper()
+        if text[i] == ' ':
+            uncip_text += text[i]
+        if text[i] in ',.?!':
+            uncip_text += text[i]
+    
+    return uncip_text
+
+def cipher(text, key, lang):
+    cipher_text = ''
+    
+    if lang.lower() in ['russian', 'русский', '1']:
+        dictionary  = 'абвгдежзийклмнопрстуфхцчшщъыьэюя'
+    elif lang.lower() in ['english', 'английский', '2']:
+        dictionary  = 'abcdefghijklmnopqrstuvwxyz'
+    else:
+        return 'This language is not available in the options'
+    
+    for i in range(len(text)):
+        for j in range(len(dictionary)):
+            if text[i] == dictionary[j]:
+                cipher_text += dictionary[(j + key) % len(dictionary)]
+            elif text[i] == dictionary[j].upper():
+                cipher_text += dictionary[(j + key) % len(dictionary)].upper()
+        if text[i] == ' ':
+            cipher_text += text[i]
+        if text[i] in ',.?!':
+            cipher_text += text[i]
+    
+    return cipher_text
+
+if mode == '1':
+    # Output the encrypted text
+    print(cipher(text, key, lang))
+elif mode == '2':
+    print(uncipher(text, key, lang))
+elif mode == '3':
+    uncipher_bruteforce(key)
